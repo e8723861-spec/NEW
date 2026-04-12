@@ -1,0 +1,97 @@
+2026-04-12 13:16:18,116 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:16:18,116 | HybridDCAInfinityGrid | INFO     | Initializing Hybrid DCA + Infinity Grid Bot
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | INFO     | Symbol: BTC-USD | Paper Trading: True
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | WARNING  | 🚀 STARTING BOT: BTC-USD | Mode: PAPER
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | INFO     | Initial price: $44955.0000
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | INFO     | Buying power: $10000.00
+2026-04-12 13:16:18,117 | HybridDCAInfinityGrid | INFO     | Target exposure: $800.00
+2026-04-12 13:16:18,118 | HybridDCAInfinityGrid | INFO     | Lower floor: $35064.90
+2026-04-12 13:16:18,118 | HybridDCAInfinityGrid | INFO     | [INITIAL] ORDER: BUY 0.005338 @ $44955.0000
+2026-04-12 13:16:18,118 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001795 @ $44550.4000
+2026-04-12 13:16:18,118 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001763 @ $45359.6000
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001812 @ $44145.8100
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001748 @ $45764.1900
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001828 @ $43741.2200
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001732 @ $46168.7800
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001846 @ $43336.6200
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001717 @ $46573.3800
+2026-04-12 13:16:18,119 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001863 @ $42932.0200
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001702 @ $46977.9800
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001881 @ $42527.4300
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001688 @ $47382.5700
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001899 @ $42122.8400
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001674 @ $47787.1600
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001917 @ $41718.2400
+2026-04-12 13:16:18,120 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001660 @ $48191.7600
+2026-04-12 13:16:18,121 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001936 @ $41313.6400
+2026-04-12 13:16:18,121 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001646 @ $48596.3600
+2026-04-12 13:16:18,121 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001954 @ $40909.0500
+2026-04-12 13:16:18,121 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001632 @ $49000.9500
+2026-04-12 13:16:18,122 | HybridDCAInfinityGrid | WARNING  | ✅ BOT STARTED successfully
+2026-04-12 13:19:14,161 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:19:14,161 | HybridDCAInfinityGrid | INFO     | Initializing Hybrid DCA + Infinity Grid Bot
+2026-04-12 13:19:14,161 | HybridDCAInfinityGrid | INFO     | Symbol: BTC-USD | Paper Trading: True
+2026-04-12 13:19:14,161 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:19:14,162 | HybridDCAInfinityGrid | INFO     | Loaded position tracking state (1 open positions)
+2026-04-12 13:19:14,162 | HybridDCAInfinityGrid | INFO     | Loaded bot state from hybrid_state_BTC.json
+2026-04-12 13:19:14,162 | HybridDCAInfinityGrid | WARNING  | 🚀 STARTING BOT: BTC-USD | Mode: PAPER
+2026-04-12 13:19:14,163 | HybridDCAInfinityGrid | INFO     | Initial price: $44955.0000
+2026-04-12 13:19:14,163 | HybridDCAInfinityGrid | INFO     | Buying power: $10000.00
+2026-04-12 13:19:14,163 | HybridDCAInfinityGrid | INFO     | Target exposure: $800.00
+2026-04-12 13:19:14,163 | HybridDCAInfinityGrid | INFO     | Lower floor: $35064.90
+2026-04-12 13:19:14,163 | HybridDCAInfinityGrid | INFO     | [INITIAL] ORDER: BUY 0.005338 @ $44955.0000
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001795 @ $44550.4000
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001763 @ $45359.6000
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001812 @ $44145.8100
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001748 @ $45764.1900
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001828 @ $43741.2200
+2026-04-12 13:19:14,164 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001732 @ $46168.7800
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001846 @ $43336.6200
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001717 @ $46573.3800
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001863 @ $42932.0200
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001702 @ $46977.9800
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001881 @ $42527.4300
+2026-04-12 13:19:14,165 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001688 @ $47382.5700
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001899 @ $42122.8400
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001674 @ $47787.1600
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001917 @ $41718.2400
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001660 @ $48191.7600
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001936 @ $41313.6400
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001646 @ $48596.3600
+2026-04-12 13:19:14,166 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001954 @ $40909.0500
+2026-04-12 13:19:14,167 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001632 @ $49000.9500
+2026-04-12 13:19:14,168 | HybridDCAInfinityGrid | WARNING  | ✅ BOT STARTED successfully
+2026-04-12 13:25:27,362 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:25:27,362 | HybridDCAInfinityGrid | INFO     | Initializing Hybrid DCA + Infinity Grid Bot
+2026-04-12 13:25:27,362 | HybridDCAInfinityGrid | INFO     | Symbol: BTC-USD | Paper Trading: True
+2026-04-12 13:25:27,362 | HybridDCAInfinityGrid | INFO     | ============================================================
+2026-04-12 13:25:27,363 | HybridDCAInfinityGrid | INFO     | Loaded position tracking state (2 open positions)
+2026-04-12 13:25:27,363 | HybridDCAInfinityGrid | INFO     | Loaded bot state from hybrid_state_BTC.json
+2026-04-12 13:25:27,363 | HybridDCAInfinityGrid | WARNING  | 🚀 STARTING BOT: BTC-USD | Mode: PAPER
+2026-04-12 13:25:27,363 | HybridDCAInfinityGrid | INFO     | Initial price: $44955.0000
+2026-04-12 13:25:27,363 | HybridDCAInfinityGrid | INFO     | Buying power: $10000.00
+2026-04-12 13:25:27,364 | HybridDCAInfinityGrid | INFO     | Target exposure: $800.00
+2026-04-12 13:25:27,364 | HybridDCAInfinityGrid | INFO     | Lower floor: $35064.90
+2026-04-12 13:25:27,364 | HybridDCAInfinityGrid | INFO     | [INITIAL] ORDER: BUY 0.005338 @ $44955.0000
+2026-04-12 13:25:27,364 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001795 @ $44550.4000
+2026-04-12 13:25:27,364 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001763 @ $45359.6000
+2026-04-12 13:25:27,365 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001812 @ $44145.8100
+2026-04-12 13:25:27,365 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001748 @ $45764.1900
+2026-04-12 13:25:27,365 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001828 @ $43741.2200
+2026-04-12 13:25:27,365 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001732 @ $46168.7800
+2026-04-12 13:25:27,366 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001846 @ $43336.6200
+2026-04-12 13:25:27,366 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001717 @ $46573.3800
+2026-04-12 13:25:27,366 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001863 @ $42932.0200
+2026-04-12 13:25:27,366 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001702 @ $46977.9800
+2026-04-12 13:25:27,367 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001881 @ $42527.4300
+2026-04-12 13:25:27,367 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001688 @ $47382.5700
+2026-04-12 13:25:27,367 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001899 @ $42122.8400
+2026-04-12 13:25:27,367 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001674 @ $47787.1600
+2026-04-12 13:25:27,367 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001917 @ $41718.2400
+2026-04-12 13:25:27,368 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001660 @ $48191.7600
+2026-04-12 13:25:27,368 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001936 @ $41313.6400
+2026-04-12 13:25:27,368 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001646 @ $48596.3600
+2026-04-12 13:25:27,368 | HybridDCAInfinityGrid | INFO     | [GRID_BUY] ORDER: BUY 0.001954 @ $40909.0500
+2026-04-12 13:25:27,368 | HybridDCAInfinityGrid | INFO     | [GRID_SELL] ORDER: SELL 0.001632 @ $49000.9500
+2026-04-12 13:25:27,369 | HybridDCAInfinityGrid | WARNING  | ✅ BOT STARTED successfully
