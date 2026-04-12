@@ -319,6 +319,11 @@ class HybridDCAInfinityGrid:
         # Your original staged DCA logic (simplified)
         if self.daily_trades >= self.settings["max_dca_buys_per_24h"]:
             return
+        # Fetch current price
+        buy_p, sell_p, _ = self.api.get_price([self.symbol])
+        current_price = buy_p.get(self.symbol) or sell_p.get(self.symbol) or 0
+        if current_price <= 0:
+            return
         # Compute unrealized % from your cost_basis or holdings
         # For now placeholder - replace with real calculation
         unrealized_pct = -3.0
