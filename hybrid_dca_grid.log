@@ -249,3 +249,4 @@
 2026-04-15 15:46:43,606 | INFO | Websocket connected
 2026-04-15 15:46:43,606 | INFO | ✅ User Data WebSocket connected - instant fill detection active
 2026-04-15 15:47:08,802 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
+2026-04-15 15:47:38,802 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
