@@ -57,3 +57,6 @@
 2026-04-15 15:27:45,723 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
 2026-04-15 15:28:15,723 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
 2026-04-15 15:28:45,724 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
+2026-04-15 15:29:15,724 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
+2026-04-15 15:29:45,724 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
+2026-04-15 15:30:15,725 | ERROR | Monitor error: 'CryptoAPITrading' object has no attribute '_read_long_dca_signal'
