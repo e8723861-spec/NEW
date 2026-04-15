@@ -5,8 +5,14 @@ import os
 import threading
 import logging
 import math
+import random
 import websocket
 from typing import Dict, Optional
+from concurrent.futures import ThreadPoolExecutor
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # ====================== IMPORT FROM YOUR MAIN FILE ======================
 from your_powertrader_file import (
@@ -23,6 +29,17 @@ from your_powertrader_file import (
     PM_START_PCT_WITH_DCA,
     TRAILING_GAP_PCT
 )
+
+# Import monitoring and notification systems
+try:
+    from notifications import get_notification_manager
+    from monitoring import get_health_monitor, get_performance_monitor
+    NOTIFICATIONS_ENABLED = True
+except ImportError:
+    NOTIFICATIONS_ENABLED = False
+    get_notification_manager = lambda: None
+    get_health_monitor = lambda: None
+    get_performance_monitor = lambda: None
 
 logging.basicConfig(
     level=logging.INFO,
@@ -55,6 +72,11 @@ class HybridDCAInfinityGrid:
         self.monitor_thread = None
         self.user_ws = None
         self.symbol_info = self._fetch_symbol_info()
+
+        # Monitoring and notifications
+        self.notifications = get_notification_manager() if NOTIFICATIONS_ENABLED else None
+        self.health_monitor = get_health_monitor() if NOTIFICATIONS_ENABLED else None
+        self.performance_monitor = get_performance_monitor() if NOTIFICATIONS_ENABLED else None
 
         self._load_state()
 
@@ -156,6 +178,10 @@ class HybridDCAInfinityGrid:
         
         logger.info(f"🚀 Starting Hybrid DCA + Infinity Grid (User Data Stream) on {self.symbol}")
 
+        # Update health monitor
+        if self.health_monitor:
+            self.health_monitor.update_metrics("websocket_connected", True)
+
         # Start real-time User Data Stream
         self._start_user_data_stream()
 
@@ -164,6 +190,11 @@ class HybridDCAInfinityGrid:
         current_price = buy_p.get(self.symbol) or sell_p.get(self.symbol) or 0
         if not current_price:
             logger.error("No price available")
+            if self.notifications:
+                try:
+                    self.notifications.send_error_alert("Unable to fetch current price")
+                except Exception as e:
+                    logger.warning(f"Failed to send error alert: {e}")
             return
 
         acct = self.api.get_account()
@@ -171,6 +202,11 @@ class HybridDCAInfinityGrid:
         self.target_usd_exposure = buying_power * self.settings["target_usd_pct"]
         self.peak_exposure = self.target_usd_exposure
         self.lower_price_floor = current_price * self.settings["lower_floor_pct"]
+
+        logger.info(f"📊 Portfolio Setup:")
+        logger.info(f"   Buying Power: ${buying_power:.2f}")
+        logger.info(f"   Target Exposure: ${self.target_usd_exposure:.2f}")
+        logger.info(f"   Current Price: ${current_price:.2f}")
 
         # Initial buy using your PowerTrader allocation
         initial_usd = self.target_usd_exposure * self.settings["start_allocation_pct"]
@@ -188,10 +224,11 @@ class HybridDCAInfinityGrid:
         """Modern WebSocket API approach for user data (post-listenKey deprecation)"""
         try:
             # For Spot: Use WebSocket API session with authentication
-            # Fallback / simplified for compatibility with your existing make_api_request
+            # Note: For real Binance, you need to get a listenKey first via REST API
             ws_base = "wss://stream.binance.com:9443" if not getattr(self.api, "api_type", "spot") == "futures" else "wss://fstream.binance.com"
             ws_url = f"{ws_base}/ws"   # You may need to adjust to the new WebSocket API endpoint if required by your setup
 
+            logger.info(f"🔗 Connecting to WebSocket: {ws_url}")
             self.user_ws = websocket.WebSocketApp(
                 ws_url,
                 on_message=self._on_user_ws_message,
@@ -200,31 +237,39 @@ class HybridDCAInfinityGrid:
                 on_open=self._on_user_ws_open
             )
 
-            threading.Thread(target=self.user_ws.run_forever, daemon=True, kwargs={"ping_interval": 30}).start()
-            logger.info("User Data Stream WebSocket started (real-time fills)")
+            ws_thread = threading.Thread(target=self.user_ws.run_forever, daemon=True, kwargs={"ping_interval": 30})
+            ws_thread.start()
+            logger.info("User Data Stream WebSocket thread started (real-time fills enabled)")
 
         except Exception as e:
             logger.error(f"Failed to start User Data Stream: {e}")
 
     def _on_user_ws_open(self, ws):
-        logger.info("✅ User Data WebSocket connected - instant fill detection active")
+        logger.info("✅ User Data WebSocket connected - instant fill detection ACTIVE")
 
     def _on_user_ws_message(self, ws, message: str):
         try:
             data = json.loads(message)
-            if data.get("e") == "executionReport":
+            # Log message type for debugging
+            msg_type = data.get("e", "unknown")
+            
+            if msg_type == "executionReport":
                 self._handle_execution_report(data)
+            elif msg_type == "outboundAccountPosition":
+                logger.debug("Account balance update received")
+            elif msg_type == "ping":
+                logger.debug("WebSocket ping received")
         except Exception as e:
-            pass  # Silently ignore malformed messages
+            logger.debug(f"WebSocket message parse error: {e}")
 
     def _on_user_ws_error(self, ws, error):
-        logger.warning(f"User WS error: {error}")
+        logger.warning(f"⚠️ User WS error: {error}")
 
     def _on_user_ws_close(self, ws, close_status, close_msg):
-        logger.warning("User Data WebSocket closed")
+        logger.warning("⚠️ User Data WebSocket closed - attempting reconnect...")
 
     def _handle_execution_report(self, report: dict):
-        """Instant fill handling"""
+        """Instant fill handling with WebSocket integration"""
         order_id = str(report.get("i") or report.get("orderId", ""))
         status = report.get("X", "")
         side = report.get("S", "").lower()
@@ -233,7 +278,7 @@ class HybridDCAInfinityGrid:
 
         if status in ("FILLED", "PARTIALLY_FILLED") and executed_qty > 0:
             tag = self.active_orders.get(order_id, {}).get("tag", "GRID")
-            logger.info(f"Instant fill: {side.upper()} {executed_qty:.6f} @ {price:.4f} | Tag: {tag}")
+            logger.info(f"⚡ INSTANT FILL: {side.upper()} {executed_qty:.8f} @ ${price:.2f} | Tag: {tag} | OrderID: {order_id}")
 
             # Record using your original ledger
             try:
@@ -245,17 +290,45 @@ class HybridDCAInfinityGrid:
                     tag=tag,
                     order_id=order_id
                 )
-            except Exception:
-                pass
+            except Exception as e:
+                logger.error(f"Trade recording error: {e}")
+
+            # Send trade alert
+            if self.notifications:
+                trade_data = {
+                    "side": side,
+                    "symbol": self.symbol,
+                    "qty": executed_qty,
+                    "price": price,
+                    "tag": tag,
+                    "order_id": order_id
+                }
+                try:
+                    self.notifications.send_trade_alert(trade_data)
+                except Exception as e:
+                    logger.warning(f"Failed to send trade alert: {e}")
+
+            # Update health monitor
+            if self.health_monitor:
+                self.health_monitor.increment_metric("trades_executed")
 
             # Update DCA tracking
             if side == "buy" and "DCA" in tag.upper():
                 for level in self.settings["dca_levels"]:
                     if level not in self.dca_stages_triggered:
                         self.dca_stages_triggered.append(level)
+                        logger.info(f"🚀 DCA Level {level}% triggered")
+                        
+                        # Send DCA alert
+                        if self.notifications:
+                            try:
+                                self.notifications.send_dca_alert(level, self.symbol)
+                            except Exception as e:
+                                logger.warning(f"Failed to send DCA alert: {e}")
                         break
 
-            # Immediate rebalance after fill
+            # Immediate rebalance after fill (FAST REACTION)
+            logger.info(f"🔄 Rebalancing grid after fill...")
             self._rebalance_after_fill()
 
             self.active_orders.pop(order_id, None)
@@ -294,20 +367,37 @@ class HybridDCAInfinityGrid:
         return None
 
     def _place_grid_orders(self, current_price: float):
+        """Place grid orders in parallel for faster execution"""
         self._cancel_all_orders()
         spacing = self.settings["base_grid_spacing_pct"]
         step = current_price * (spacing / 100.0)
 
+        # Prepare all orders to place
+        orders_to_place = []
         for i in range(1, self.settings["num_grids"] + 1):
             buy_price = self._round_price(current_price - i * step)
             sell_price = self._round_price(current_price + i * step)
 
             if buy_price > self.lower_price_floor:
                 qty_buy = self._round_qty((self.target_usd_exposure / self.settings["num_grids"]) / buy_price)
-                self._place_limit_order("BUY", buy_price, qty_buy, tag="GRID_BUY")
+                orders_to_place.append(("BUY", buy_price, qty_buy, "GRID_BUY"))
 
             qty_sell = self._round_qty((self.target_usd_exposure / self.settings["num_grids"]) / sell_price)
-            self._place_limit_order("SELL", sell_price, qty_sell, tag="GRID_SELL")
+            orders_to_place.append(("SELL", sell_price, qty_sell, "GRID_SELL"))
+
+        # Place all orders in parallel using ThreadPoolExecutor
+        logger.info(f"📈 Placing {len(orders_to_place)} grid orders in parallel...")
+        start_time = time.time()
+        
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            futures = [executor.submit(self._place_limit_order, side, price, qty, tag) 
+                      for side, price, qty, tag in orders_to_place]
+            # Wait for all to complete
+            for future in futures:
+                future.result()
+        
+        elapsed = time.time() - start_time
+        logger.info(f"Grid placed in {elapsed:.3f}s ({len(orders_to_place)/elapsed:.1f} orders/sec)")
 
     def _cancel_all_orders(self):
         for oid in list(self.active_orders.keys()):
@@ -318,6 +408,9 @@ class HybridDCAInfinityGrid:
         self.active_orders.clear()
 
     def _light_monitor_loop(self):
+        last_health_check = time.time()
+        health_check_interval = int(os.getenv("HEALTH_CHECK_INTERVAL", 300))
+        
         while self.running:
             try:
                 now = time.time()
@@ -325,21 +418,41 @@ class HybridDCAInfinityGrid:
                     self.daily_trades = 0
                     self.daily_reset_ts = now
 
+                # Periodic health check
+                if now - last_health_check > health_check_interval:
+                    if self.health_monitor:
+                        self.health_monitor.check_health()
+                        try:
+                            self.health_monitor.save_health_report()
+                        except Exception as e:
+                            logger.warning(f"Failed to save health report: {e}")
+                    last_health_check = now
+
                 signal = _read_long_dca_signal(self.base)
                 if signal < self.settings["min_signal_level"]:
-                    time.sleep(60)
+                    # No signal - check less frequently
+                    time.sleep(random.uniform(5, 10))
                     continue
 
+                # Signal present - check frequently for opportunities
                 self._handle_dca()   # DCA check (signal-driven)
                 self._check_profit_release()
                 if self._check_drawdown() > self.settings["max_drawdown_pct"]:
                     logger.warning("Max drawdown reached - stopping")
+                    if self.notifications:
+                        try:
+                            self.notifications.send_error_alert("Max drawdown reached")
+                        except Exception as e:
+                            logger.warning(f"Failed to send alert: {e}")
                     self.stop()
 
-                time.sleep(30)
+                # Fast monitoring loop - check every 2-5 seconds
+                time.sleep(random.uniform(2, 5))
             except Exception as e:
                 logger.error(f"Monitor error: {e}")
-                time.sleep(30)
+                if self.health_monitor:
+                    self.health_monitor.increment_metric("errors_count")
+                time.sleep(random.uniform(2, 5))
 
     def _handle_dca(self):
         # Your original staged DCA logic (simplified)
@@ -381,19 +494,55 @@ class HybridDCAInfinityGrid:
             self.user_ws.close()
         self._cancel_all_orders()
         self._save_state()
+        
+        # Save final reports
+        if self.health_monitor:
+            try:
+                self.health_monitor.save_health_report()
+            except Exception as e:
+                logger.warning(f"Failed to save final health report: {e}")
+        
+        if self.performance_monitor:
+            try:
+                self.performance_monitor.save_performance_report()
+            except Exception as e:
+                logger.warning(f"Failed to save performance report: {e}")
+        
         logger.info("🛑 Hybrid Bot stopped")
 
 # ====================== RUN ======================
 if __name__ == "__main__":
-    api = CryptoAPITrading()
-    bot = HybridDCAInfinityGrid(api, "BTC-USD")   # Change to your coin
+    # Determine mode
+    paper_trading = os.getenv("PAPER_TRADING", "true").lower() == "true"
+    symbol = os.getenv("BOT_SYMBOL", "BTC-USD")
+    run_mode = os.getenv("RUN_MODE", "development")
+    
+    print()
+    print("╔═══════════════════════════════════════════════════╗")
+    print("║  Hybrid DCA Grid Trading Bot - Starting           ║")
+    print(f"║  Mode: {'PAPER TRADING (Safe)' if paper_trading else 'LIVE TRADING (Real Money)'}")
+    print(f"║  Symbol: {symbol}")
+    print(f"║  Environment: {run_mode.upper()}")
+    print("╚═══════════════════════════════════════════════════╝")
+    print()
+    
+    api = CryptoAPITrading(paper_trading=paper_trading)
+    bot = HybridDCAInfinityGrid(api, symbol)
 
     try:
         bot.start()
         while True:
             time.sleep(60)
     except KeyboardInterrupt:
+        logger.info("⏸ Received interrupt signal - shutting down gracefully...")
         bot.stop()
+        logger.info("✅ Bot stopped cleanly")
     except Exception as e:
         logger.critical(f"Fatal error: {e}")
+        if bot.notifications:
+            try:
+                bot.notifications.send_error_alert(f"Bot crashed: {str(e)}")
+            except Exception as send_err:
+                logger.warning(f"Failed to send crash alert: {send_err}")
         bot.stop()
+        raise

@@ -1,0 +1,33 @@
+[Unit]
+Description=Hybrid DCA Grid Trading Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=trading
+WorkingDirectory=/home/trading/hybrid_dca_bot
+Environment="PATH=/home/trading/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
+EnvironmentFile=/home/trading/hybrid_dca_bot/.env
+ExecStart=/usr/bin/python3 /home/trading/hybrid_dca_bot/NEW
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=hybrid-dca-bot
+
+# Resource limits
+MemoryLimit=512M
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+# Security
+PrivateTmp=yes
+NoNewPrivileges=yes
+ReadOnlyPaths=/etc
+
+[Install]
+WantedBy=multi-user.target
